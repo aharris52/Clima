@@ -15,6 +15,8 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var searchTextField: UITextField!
     
+    var weatherManager = WeatherManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -37,6 +39,10 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
     //Will dismiss the keyboard when return is pressed
     func textFieldDidEndEditing(_ textField: UITextField) {
         //print(searchTextField.text!)
+        
+        if let city = searchTextField.text {
+            weatherManager.fetchWeather(cityName: city)
+        }
         searchTextField.text = ""
     }
     

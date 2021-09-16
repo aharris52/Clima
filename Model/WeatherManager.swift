@@ -8,10 +8,16 @@
 
 import Foundation
 
+protocol WeatherManagerDelegate {
+    func didUpdateWeather(weather: WeatherModel)
+}
+
 struct WeatherManager {
     
     let weatherURL = "https://api.openweathermap.org/data/2.5/weather?&appid=a8d351b8a21663816f135c6653a4aa7c&units=imperial"
     //let weatherURL = "https://api.openweathermap.org/data/2.5/weather?&appid=c55cb732122714b2f4b5ca950bda140d&units=imperial"
+    
+    var delegate: WeatherManagerDelegate?
     
     
     func fetchWeather(cityName: String){
@@ -33,7 +39,14 @@ struct WeatherManager {
                     return
                 }
                 if let safeData = data {
-                    let weather = self.parseJSON(safeData)
+                    if let weather = self.parseJSON(safeData) {
+                        //let weatherVC = WeatherViewController()
+                        //weatherVC.didUpdateWeather(weather: weather)
+                        
+                        // Pretend we know what design patterns are and
+                        // decouple this struct by using a delegate pattern.
+                        self.delegate?.didUpdateWeather(weather: weather)
+                    }
                 }
             }
             //4.  start the task
@@ -66,3 +79,5 @@ struct WeatherManager {
         }
     }
 }
+
+

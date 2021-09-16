@@ -9,7 +9,8 @@
 import Foundation
 
 protocol WeatherManagerDelegate {
-    func didUpdateWeather(weather: WeatherModel)
+    func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel)
+    func didFailWithError(error: Error)
 }
 
 struct WeatherManager {
@@ -23,11 +24,11 @@ struct WeatherManager {
     func fetchWeather(cityName: String){
         let urlString = "\(weatherURL)&q=\(cityName)"
         //  for debugging
-        print(urlString)
-        performRequest(urlString: urlString)
+        //print(urlString)
+        performRequest(with: urlString)
     }
     
-    func performRequest(urlString : String) {
+    func performRequest(with urlString : String) {
         //1.  create a url
         if let url = URL(string: urlString){
             //2.  create url session
@@ -35,7 +36,8 @@ struct WeatherManager {
             //3.  give the session a task
             let task = session.dataTask(with: url) { data, response, error in
                 if error != nil {
-                    print(error!)
+                    //print(error!)
+                    self.delegate?.didFailWithError(error: error!)
                     return
                 }
                 if let safeData = data {
@@ -45,7 +47,7 @@ struct WeatherManager {
                         
                         // Pretend we know what design patterns are and
                         // decouple this struct by using a delegate pattern.
-                        self.delegate?.didUpdateWeather(weather: weather)
+                        self.delegate?.didUpdateWeather(self, weather: weather)
                     }
                 }
             }
@@ -74,7 +76,8 @@ struct WeatherManager {
             print(weather.temperatureString)
             return weather
         } catch {
-            print(error)
+            self.delegate?.didFailWithError(error: error)
+            //print(error)
             return nil
         }
     }

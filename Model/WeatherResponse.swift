@@ -8,11 +8,16 @@
 
 import Foundation
 
+//Codeable is a type alias to the combination
+//of two common protocols used in conjunction.
+//The "Encodable" and "Deodable" are combined
+//in this protocol.
+
 struct WeatherResponse: Codable {
     let name: String
     let main: Main
     let weather: [Weather]
-    
+    let id: Int
 }
 
 struct Main: Codable {

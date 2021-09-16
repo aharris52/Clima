@@ -33,7 +33,7 @@ struct WeatherManager {
                     return
                 }
                 if let safeData = data {
-                    self.parseJSON(safeData)
+                    let weather = self.parseJSON(safeData)
                 }
             }
             //4.  start the task
@@ -41,21 +41,28 @@ struct WeatherManager {
         }
     }
     
-    func parseJSON(_ jsonWeatherData: Data) {
+    func parseJSON(_ jsonWeatherData: Data) -> WeatherModel? {
         let decoder = JSONDecoder()
         //  the use of .self converts WeatherData to the correct type
         //  and removes ambiguity as to who is using/calling a method from
         //  within a closure
         do {
             let response = try decoder.decode(WeatherResponse.self, from: jsonWeatherData)
-            print(response.name)
-            for w in response.weather {
-                print(w)
-                print("Description: (\(w.description))")
-            }
-            print("Weather: (\(response.main.temp)")
+        
+            let id = response.weather[0].id
+            let name = response.name
+            let temp = response.main.temp
+            // create WeatherModel to pop image to ui
+            let weather = WeatherModel(conditionId: id, cityName: name, temperature: temp)
+            print(id)
+            print(name)
+            print(temp)
+            print(weather.conditionName)
+            print(weather.temperatureString)
+            return weather
         } catch {
             print(error)
+            return nil
         }
     }
 }

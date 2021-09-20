@@ -12,6 +12,8 @@ bar input. UI is responsive to both GPS and search results.
 * Protocols/Delegate Design Pattern
 * Swift extensions
 
+
+
 #### Shoutout
 This project was done as part of an iOS tutorial series
 on Udemy done by the https://www.appbrewery.co.
